@@ -1,0 +1,13 @@
+diff --git a/lsp-api.lisp b/lsp-api.lisp
+index 0175a9c..6f95499 100644
+--- a/lsp-api.lisp
++++ b/lsp-api.lisp
+@@ -204,7 +204,7 @@
+ 
+ ;;;
+ (defun load-systems (system-names)
+-  (ql:quickload system-names))
++  (asdf:load-systems system-names))
+ 
+ (defun compile-and-load-file (filename)
+   (uiop:with-temporary-file (:pathname output-file :type "fasl")

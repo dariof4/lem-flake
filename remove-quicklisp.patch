@@ -1,0 +1,49 @@
+diff --git a/modes/lisp-mode/lisp-mode.lisp b/modes/lisp-mode/lisp-mode.lisp
+index 06ef1d47..fadd76e3 100644
+--- a/modes/lisp-mode/lisp-mode.lisp
++++ b/modes/lisp-mode/lisp-mode.lisp
+@@ -740,7 +740,7 @@
+ (define-command lisp-quickload (system-name)
+     ((prompt-for-symbol-name "System: " (buffer-package (current-buffer))))
+   (check-connection)
+-  (eval-with-transcript `(,(uiop:find-symbol* :quickload :quicklisp) ,(string system-name))))
++  (eval-with-transcript `(,(uiop:find-symbol* :load-system :asdf) ,(string system-name))))
+ 
+ (defun prompt-for-symbol-name (prompt &optional (initial ""))
+   (let ((package (current-package)))
+diff --git a/modes/lisp-mode/repl.lisp b/modes/lisp-mode/repl.lisp
+index a9a8c300..7e140e4a 100644
+--- a/modes/lisp-mode/repl.lisp
++++ b/modes/lisp-mode/repl.lisp
+@@ -510,7 +510,7 @@
+ (define-repl-shortcut quickload (n)
+   (declare (ignore n))
+   (let ((system (prompt-for-system "Quickload System: ")))
+-    (listener-eval (prin1-to-string `(ql:quickload ,system)))))
++    (listener-eval (prin1-to-string `(asdf:load-system ,system)))))
+ 
+ (define-command backward-prompt () ()
+   (when (equal (current-buffer) (repl-buffer))
+diff --git a/src/lem.lisp b/src/lem.lisp
+index cce7127f..758d092d 100644
+--- a/src/lem.lisp
++++ b/src/lem.lisp
+@@ -169,8 +169,7 @@
+ 
+ (defun init (args)
+   (unless (equal (funcall 'user-homedir-pathname) ;; funcall for sbcl optimization
+-                 *original-home*)
+-    (init-quicklisp (merge-pathnames "quicklisp/" (lem-home))))
++                 *original-home*))
+   (uiop:symbol-call :lem-core :load-site-init)
+   (run-hooks *before-init-hook*)
+   (unless (command-line-arguments-no-init-file args)
+@@ -232,7 +231,7 @@
+         (t
+          (let ((implementation (get-default-implementation :errorp nil)))
+            (unless implementation
+-             (ql:quickload :lem-ncurses)
++             (asdf:load-system :lem-ncurses)
+              (setf implementation (get-default-implementation)))
+            (invoke-frontend
+             (lambda (&optional initialize finalize)
