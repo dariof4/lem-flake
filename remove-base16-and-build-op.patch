@@ -1,0 +1,20 @@
+diff --git a/lem.asd b/lem.asd
+index b66b6ed5..d396a09a 100644
+--- a/lem.asd
++++ b/lem.asd
+@@ -244,7 +244,6 @@
+                "lem-makefile-mode"
+                "lem-shell-mode"
+                "lem-sql-mode"
+-               "lem-base16-themes"
+                #+sbcl
+                "lem-elixir-mode"
+                "lem-documentation-mode"
+@@ -264,7 +263,6 @@
+                 :components ((:static-file "dumbrebaseeditor.sh")))))
+ 
+ (defsystem "lem/executable"
+-  :build-operation program-op
+   :build-pathname "lem"
+   :entry-point "lem:main"
+   :depends-on ("lem-ncurses"))
