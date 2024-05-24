@@ -1,15 +1,15 @@
-{ sbcl, cl-charms, jsonrpc, queues, openssl, micros, makeWrapper, fetchFromGitHub, writeText, lib, symlinkJoin, lem }:
-  sbcl.buildASDFSystem rec {
+{ pkgs, sbcl, cl-charms, jsonrpc, queues, openssl, micros, lem-mailbox, makeWrapper, fetchFromGitHub, writeText, lib, symlinkJoin, lem }:
+sbcl.buildASDFSystem rec {
         pname = "lem";
-        version = "v2.1.0";
+        version = "2.2.0";
         src = fetchFromGitHub {
           owner = "lem-project";
           repo = "lem";
-          rev = "v2.1.0";
-          sha256 = "sha256-8xdHWJYYr8kfznytn+EEU37Wcy0ryssXRwHosSoQpEQ=";
+          rev = "v2.2.0";
+          sha256 = "sha256-aMPyeOXyFSxhh75eiAwMStLc2fO1Dwi2lQsuH0IYMd0=";
           fetchSubmodules = true;
         };
-        lispLibs = [ micros cl-charms jsonrpc  queues ] ++ (with sbcl.pkgs;
+        lispLibs = [ micros cl-charms jsonrpc queues lem-mailbox ] ++ (with sbcl.pkgs;
           [
             alexandria
             trivial-gray-streams
@@ -17,8 +17,8 @@
             cl-ppcre
             inquisitor
             babel
-            bordeaux-threads
             yason
+            bordeaux-threads
             log4cl
             split-sequence
             dexador
@@ -43,7 +43,7 @@
           ;(asdf:load-system :lem-tetris)
           (asdf:operate :program-op :lem/executable)
         '';
-        patches = [ ./remove-quicklisp.patch ./remove-build-operation.patch ];
+        patches = [ ./remove-quicklisp.patch ./remove-base16-and-build-op.patch ];
         installPhase = ''
           mkdir -p $out/bin
           cp -v lem $out/bin
