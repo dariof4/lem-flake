@@ -1,15 +1,15 @@
-{ sbcl, cl-charms, jsonrpc, queues, openssl, micros, makeWrapper, fetchFromGitHub, writeText, lib, symlinkJoin, lem }:
+{ sbcl, cl-charms, jsonrpc, queues, openssl, micros, lem-mailbox, makeWrapper, fetchFromGitHub, writeText, lib, symlinkJoin, lem }:
   sbcl.buildASDFSystem rec {
         pname = "lem";
-        version = "v2.1.0";
+        version = "unstable";
         src = fetchFromGitHub {
           owner = "lem-project";
           repo = "lem";
-          rev = "v2.1.0";
-          sha256 = "sha256-8xdHWJYYr8kfznytn+EEU37Wcy0ryssXRwHosSoQpEQ=";
+          rev = "4dd7e27e8435873cc45f83439d0142c94dc0f25f";
+          sha256 = "sha256-9hqc2N0xtltLTPlNzcYWpXNnmVBpGctkNedaZ8ak4ZE=";
           fetchSubmodules = true;
         };
-        lispLibs = [ micros cl-charms jsonrpc  queues ] ++ (with sbcl.pkgs;
+        lispLibs = [ micros lem-mailbox cl-charms jsonrpc  queues ] ++ (with sbcl.pkgs;
           [
             alexandria
             trivial-gray-streams
@@ -35,23 +35,7 @@
             cl-change-case
             swank
             esrap
-            bt-semaphore]);
+            bt-semaphore
+          ]);
         nativeBuildInputs = [ openssl makeWrapper ];
-        buildScript = writeText "build-lem.lisp" ''
-          (load (concatenate 'string (sb-ext:posix-getenv "asdfFasl") "/asdf.fasl"))
-          ; Uncomment this line to load the :lem-tetris contrib system
-          ;(asdf:load-system :lem-tetris)
-          (asdf:operate :program-op :lem/executable)
-        '';
-        patches = [ ./remove-quicklisp.patch ./remove-build-operation.patch ];
-        installPhase = ''
-          mkdir -p $out/bin
-          cp -v lem $out/bin
-          wrapProgram $out/bin/lem \
-            --prefix LD_LIBRARY_PATH : $LD_LIBRARY_PATH \
-        '';
-
-        passthru = {
-          withPackages = import ./wrapper.nix { inherit makeWrapper sbcl lib lem symlinkJoin; };
-        };
       }

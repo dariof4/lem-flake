@@ -1,3 +1,26 @@
+diff --git a/contrib/micros-systems.lisp b/contrib/micros-systems.lisp
+index 13396ee..e6d8117 100644
+--- a/contrib/micros-systems.lisp
++++ b/contrib/micros-systems.lisp
+@@ -2,16 +2,7 @@
+ 
+ (defslimefun list-systems ()
+   "Returns the Quicklisp and ASDF systems list."
+-  (unless (member :quicklisp *features*)
+-    (error "Could not find Quicklisp already loaded."))
+   (asdf:ensure-source-registry)
+-  (let ((asdf-systems
+-          (sort (loop :for system-name :being :each :hash-key :of asdf/source-registry:*source-registry*
+-                      :collect system-name)
++  (sort (loop :for system-name :being :each :hash-key :of asdf/source-registry:*source-registry*
++              :collect system-name)
+                 #'string<))
+-        (quicklisp-systems
+-          (mapcar (lambda (dist)
+-                    (uiop:symbol-call '#:ql-dist '#:name dist))
+-                  (uiop:symbol-call '#:quicklisp '#:system-list))))
+-    (append asdf-systems
+-            quicklisp-systems)))
 diff --git a/lsp-api.lisp b/lsp-api.lisp
 index 0175a9c..6f95499 100644
 --- a/lsp-api.lisp

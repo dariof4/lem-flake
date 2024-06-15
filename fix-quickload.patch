@@ -1,0 +1,13 @@
+diff --git a/extensions/lisp-mode/lisp-mode.lisp b/extensions/lisp-mode/lisp-mode.lisp
+index 80ff6bf3..4d617578 100644
+--- a/extensions/lisp-mode/lisp-mode.lisp
++++ b/extensions/lisp-mode/lisp-mode.lisp
+@@ -759,7 +759,7 @@
+ (define-command lisp-quickload (system-name)
+     ((prompt-for-symbol-name "System: " (buffer-package (current-buffer))))
+   (check-connection)
+-  (eval-with-transcript `(,(uiop:find-symbol* :quickload :quicklisp) ,(string system-name))))
++  (eval-with-transcript `(,(uiop:find-symbol* :load-system :asdf) ,(string system-name))))
+ 
+ (defun prompt-for-symbol-name (prompt &optional (initial ""))
+   (let ((package (current-package)))
