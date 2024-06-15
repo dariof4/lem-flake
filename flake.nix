@@ -100,8 +100,8 @@
       packages.x86_64-linux.lem-sdl2 = self.packages.x86_64-linux.lem-exec "sdl2";
       packages.x86_64-linux.default = self.packages.x86_64-linux.lem-ncurses;
 
-      overlays.default = final: prev: {lem-ncurses = packages.x86_64-linux.lem-ncurses;
-                                       lem-sdl2 = packages.x86_64-linux.lem-sdl2;};
+      overlays.default = final: prev: {lem-ncurses = self.packages.x86_64-linux.lem-ncurses;
+                                       lem-sdl2 = self.packages.x86_64-linux.lem-sdl2;};
 
       devShells.x86_64-linux.default =
         let
